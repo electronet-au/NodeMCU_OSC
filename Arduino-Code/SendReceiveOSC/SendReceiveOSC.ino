@@ -5,27 +5,27 @@
  * Created by Fabian Fiess in November 2016
  * Inspired by Oscuino Library Examples, Make Magazine 12/2015
  */
- 
+
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <OSCMessage.h>                // for sending OSC messages
 #include <OSCBundle.h>                 // for receiving OSC messages
 
-char ssid[] = "difix";                 // your network SSID (name)
-char pass[] = "88288828";              // your network password
+char ssid[] = "CompanionTallyPi";                 // your network SSID (name)
+char pass[] = "TPwifi1968aft01";              // your network password
 
 // Button Input + LED Output
-const int btnPin = 12;                 // D6 pin at NodeMCU
-const int ledPin = 14;                 // D5 pin at NodeMCU
+const int btnPin = 14;                 // D5 pin
+const int ledPin = 12;                 // D6 pin
 const int boardLed = LED_BUILTIN;      // Builtin LED
 
 boolean btnChanged = false;
-int btnVal = 1;  
+int btnVal = 1;
 
 WiFiUDP Udp;                           // A UDP instance to let us send and receive packets over UDP
-const IPAddress destIp(192,168,0,3);   // remote IP of the target device
-const unsigned int destPort = 9000;    // remote port of the target device where the NodeMCU sends OSC to
-const unsigned int localPort = 8000;   // local port to listen for UDP packets at the NodeMCU (another device must send OSC messages to this port)
+const IPAddress destIp(172.168.1.1);   // remote IP of the target device
+const unsigned int destPort = 12321;    // remote port of the target device whereto sends OSC to
+const unsigned int localPort = 12321;   // local port to listen for UDP packets OSC (another device must send OSC messages to this port)
 
 unsigned int ledState = 1;             // LOW means led is *on*
 
@@ -34,8 +34,8 @@ void setup() {
 
     // Specify a static IP address for NodeMCU - only needeed for receiving messages)
     // If you erase this line, your ESP8266 will get a dynamic IP address
-    WiFi.config(IPAddress(192,168,0,123),IPAddress(192,168,0,1), IPAddress(255,255,255,0)); 
-  
+    // WiFi.config(IPAddress(192,168,0,123),IPAddress(192,168,0,1), IPAddress(255,255,255,0));
+
     // Connect to WiFi network
     Serial.println();
     Serial.print("Connecting to ");
@@ -46,7 +46,7 @@ void setup() {
         delay(500);
         Serial.print(".");
     }
-    
+
     Serial.println("");
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
@@ -60,7 +60,7 @@ void setup() {
     // btnInput + LED Output
     pinMode(btnPin, INPUT);
     pinMode(ledPin, OUTPUT);
-    pinMode(boardLed, OUTPUT); 
+    pinMode(boardLed, OUTPUT);
 }
 
 void loop() {
@@ -110,7 +110,7 @@ void toggleOnOff(OSCMessage &msg, int addrOffset){
 
   digitalWrite(boardLed, (ledState + 1) % 2);   // Onboard LED works the wrong direction (1 = 0 bzw. 0 = 1)
   digitalWrite(ledPin, ledState);               // External LED
-  
+
   if (ledState) {
     Serial.println("LED on");
   }
