@@ -13,6 +13,7 @@
 
 char ssid[] = "CompanionTallyPi";                 // your network SSID (name)
 char pass[] = "TPwifi1968aft01";              // your network password
+char DeIP[] = "172.168.1.1"; // remote IP of the target device
 
 // Button Input + LED Output
 const int btnPin = 14;                 // D5 pin
@@ -23,7 +24,7 @@ boolean btnChanged = false;
 int btnVal = 1;
 
 WiFiUDP Udp;                           // A UDP instance to let us send and receive packets over UDP
-const IPAddress destIp(172.168.1.1);   // remote IP of the target device
+const IPAddress destIp(172,168,1,1);   // remote IP of the target device
 const unsigned int destPort = 12321;    // remote port of the target device whereto sends OSC to
 const unsigned int localPort = 12321;   // local port to listen for UDP packets OSC (another device must send OSC messages to this port)
 
@@ -70,7 +71,7 @@ void loop() {
 
 void sendOSC(){
     // read btnInput and send OSC
-    OSCMessage msgOut("/1/buttonListener");
+    OSCMessage msgOut("/location/99/3/1/press");
 
     if(digitalRead(btnPin) != btnVal) {
         btnChanged = true;
